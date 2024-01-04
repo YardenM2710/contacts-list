@@ -1,0 +1,21 @@
+// Setup
+@import 'setup/variables';
+@import 'setup/functions';
+@import 'setup/mixins';
+
+// Basics
+@import 'basics/typography';
+@import 'basics/base';
+@import 'basics/helpers';
+@import 'basics/layout';
+@import 'basics/modals';
+@import 'basics/animations';
+
+//components
+
+@import 'components/contact-list';
+@import 'components/contact-details';
+@import 'components/main-header';
+@import 'components/contact-preview';
+@import 'components/no-results';
+@import 'components/sort-by';
