@@ -17,16 +17,28 @@ function _getUrl(id = '') {
   return `${BASE_URL}/${id}`
 }
 
-async function query(sortBy) {
+async function query(sortBy, filterBy) {
   try {
     const savedContacs = storageService.load(KEY)
-    if (savedContacs) return sortContacts(savedContacs, sortBy)
+    const filteredContacts = filterContacts(savedContacs, filterBy)
+    console.log('filteredContacts', filteredContacts);
+    if (filteredContacts) return sortContacts(filteredContacts, sortBy)
     const { data } = await axios.get(_getUrl())
     storageService.store(KEY, data)
     return sortContacts(data, sortBy)
   } catch (err) {
+    //add better error handling
     console.log(err)
   }
+}
+
+function filterContacts(contacts, filterBy) {
+  if (!filterBy) return contacts
+  const filteredList = contacts.filter(contact => {
+    const name = contact.name.first.toLowerCase()
+    return name.includes(filterBy)
+  })
+  return filteredList
 }
 
 function sortContacts(contacts, sortBy) {
@@ -57,26 +69,6 @@ function sortContacts(contacts, sortBy) {
   return contacts;
 }
 
-// function sortContacts(contacts, sortBy) {
-//   if (!sortBy) return contacts.sort((a, b) => a.name.first.localeCompare(b.name.first))
-//   if (sortBy.name == 'DESC') {
-//     return contacts.sort((a, b) => {
-//       if (a.name.first > b.name.first) return -1;
-//       if (b.name.first > a.name.first) return 1;
-//       return 0;
-//     });
-//   }
-//   if (sortBy.age === 'ASC') {
-//     return contacts.sort((a, b) => a.dob.age - b.dob.age)
-//   }
-//   if (sortBy.age === 'DESC') {
-//     return contacts.sort((a, b) => b.dob.age - a.dob.age)
-//   }
-//   return contacts.sort((a, b) => a.name.first.localeCompare(b.name.first)
-//   )
-
-// }
-
 async function getById(contactId) {
   try {
     const savedContacs = storageService.load(KEY)
@@ -89,10 +81,12 @@ async function getById(contactId) {
 async function deleteContact(id) {
   try {
     const contacts = storageService.load(KEY)
+    const { name } = await getById(id)
     const newContacts = contacts.filter(contact => contact.id !== id)
     storageService.store(KEY, newContacts)
+    return Promise.resolve(name)
   } catch (err) {
-    console.log(err)
+    throw { message: 'Failed to delete contact', statusCode: 500 }
   }
 }
 
@@ -103,8 +97,9 @@ async function addContact() {
     const { gender, name, email, picture, location, login, phone, dob } = data.results[0]
     contacts.push({ id: login.uuid, gender, name, email, picture, location, phone, dob })
     storageService.store(KEY, contacts)
+    return Promise.resolve(name)
   } catch (err) {
-    console.log(err)
+    throw { message: 'Failed to add contact', statusCode: 500 }
   }
 }
 
