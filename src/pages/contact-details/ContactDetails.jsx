@@ -98,7 +98,6 @@ export function ContactDetails() {
       {contact && (
         <Box sx={{ ...contactDetailsStyle, ...getLayoutHeight() }} className="contact-details">
           <Box sx={contactDetailsHeaderStyle} className="contact-details-header">
-            {/* <ConfirmPrompt padding={'5px'} textA="Are you sure you want to delete this contact ?" textB="This contact will be deleted permanently" onConfirm={deleteContact} /> */}
             <div>
               <Typography sx={{ fontSize: '19px' }}>About contact</Typography>
             </div>
@@ -118,9 +117,11 @@ export function ContactDetails() {
                 {contact.name.last}
               </Typography>
             </Box>
-            <Box ml={1}>
-              <ConfirmPrompt padding={'5px'} textA="Are you sure you want to delete this contact ?" textB="This contact will be deleted permanently" onConfirm={deleteContact} />
-            </Box>
+            {isMobile && (
+              <Box ml={1}>
+                <ConfirmPrompt padding={'5px'} textA="Are you sure you want to delete this contact ?" textB="This contact will be deleted permanently" onConfirm={deleteContact} />
+              </Box>
+            )}
           </Box>
           <Box sx={InnerDetailsStyle} className="contact-adress">
             <Typography width={100} mr={2} color={'grey'} variant="h6" component="h3">
