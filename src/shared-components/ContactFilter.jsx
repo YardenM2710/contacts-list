@@ -3,9 +3,10 @@ import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 export function ContactFilter({ setFilterBy }) {
   const [textFieldValue, setTextFieldValue] = useState('');
+
   const handleChange = e => {
     setTextFieldValue(e.target.value);
-    setFilterBy(e.target.value);
+    setFilterBy({ value: e.target.value });
   };
   return (
     <TextField

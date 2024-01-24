@@ -5,19 +5,20 @@ import { contactService } from '../../services/contactService';
 import { MainHeader } from '../../shared-components/MainHeader';
 import { NoResults } from '../../shared-components/NoResults';
 import useIsMobile from '../../custom-hooks/use-is-mobile.hook';
-import { SortCmp } from './SortCmp';
+import { SortCmp } from '../../shared-components/SortCmp';
 import { useSnackbar } from 'notistack';
 
 export function ContactPage() {
   const [contacts, setContacts] = useState([]);
   const [countries, setCountries] = useState([]);
   const [sortBy, setSortBy] = useState({ field: 'name', order: 'asc' });
+  const [filterBy, setFilterBy] = useState({ value: '' });
   const isMobile = useIsMobile();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     loadContacts();
-  }, [sortBy]);
+  }, [sortBy, filterBy]);
 
   useEffect(() => {
     countCountries();
@@ -30,12 +31,7 @@ export function ContactPage() {
   };
 
   const loadContacts = async () => {
-    const contacts = await contactService.query(sortBy);
-    setContacts(contacts);
-  };
-  const setFilterBy = async value => {
-    const contacts = await contactService.query(sortBy, value);
-    console.log('setFilterBy', contacts);
+    const contacts = await contactService.query(sortBy, filterBy);
     setContacts(contacts);
   };
 
