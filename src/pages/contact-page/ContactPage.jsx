@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ContactList from './ContactList';
+import { ContactList } from './ContactList';
 import { ContactsContext } from '../../context/context';
 import { contactService } from '../../services/contactService';
 import { MainHeader } from '../../shared-components/MainHeader';
@@ -28,6 +28,12 @@ export function ContactPage() {
     // Toggle sorting order if the same field is clicked again
     const newOrder = sortBy.field === field && sortBy.order === 'asc' ? 'desc' : 'asc';
     setSortBy({ field, order: newOrder });
+  };
+
+  const saveContacts = contacts => {
+    console.log(contacts);
+    setContacts(contacts);
+    contactService.saveContacts(contacts);
   };
 
   const loadContacts = async () => {
@@ -66,7 +72,7 @@ export function ContactPage() {
     <>
       <MainHeader setFilterBy={setFilterBy} addContact={addContact} contactCount={contacts?.length} countriesCount={countries} />
       <SortCmp sortBy={sortBy} handleSort={handleSort} />
-      <ContactsContext.Provider value={{ contacts, isMobile }}>{contacts?.length ? <ContactList deleteContact={deleteContact} /> : <NoResults />}</ContactsContext.Provider>
+      <ContactsContext.Provider value={{ contacts, isMobile }}>{contacts?.length ? <ContactList deleteContact={deleteContact} saveContacts={saveContacts} /> : <NoResults />}</ContactsContext.Provider>
     </>
   );
 }

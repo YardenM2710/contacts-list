@@ -8,7 +8,8 @@ export const contactService = {
   query,
   getById,
   deleteContact,
-  addContact
+  addContact,
+  saveContacts
 }
 
 // function _getUrl(id = '') {
@@ -103,6 +104,14 @@ async function addContact() {
     return Promise.resolve(name)
   } catch (error) {
     throw { message: 'Failed to add contact', error, statusCode: 500 }
+  }
+}
+async function saveContacts(contacts) {
+  try {
+    storageService.store(KEY, contacts)
+    return Promise.resolve()
+  } catch (error) {
+    throw { message: 'Failed to save contacts', error, statusCode: 500 }
   }
 }
 

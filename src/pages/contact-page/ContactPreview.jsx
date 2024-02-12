@@ -17,7 +17,7 @@ const contactPreviewStyle = {
   boxShadow: '0px 0px 16px -12px',
   borderRadius: '15px',
   margin: '10px 5px',
-  cursor: 'pointer',
+  cursor: 'grab',
   transition: '0.3s',
   position: 'relative'
 };
@@ -42,7 +42,7 @@ const contactEmailSX = {
   }
 };
 
-export default function ContactPreview({ contact, deleteContact }) {
+export default function ContactPreview({ contact, deleteContact, index, handleSort }) {
   const [isHover, setIsHover] = useState(false);
   const { isMobile } = useContext(ContactsContext);
   const navigate = useNavigate();
@@ -63,8 +63,9 @@ export default function ContactPreview({ contact, deleteContact }) {
   const onDeleteContact = () => {
     deleteContact(contact.id);
   };
+
   return (
-    <Box sx={contactPreviewStyle} onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)} className="contact-preview">
+    <Box sx={contactPreviewStyle} onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)} className="contact-preview handle">
       <Avatar src={contact.picture.thumbnail} style={getAvatarBorder()}></Avatar>
       <Box ml={2} className="contact-preview-name">
         <Typography variant="h6" component="h1">{`${contact.name.first} ${contact.name.last}`}</Typography>
