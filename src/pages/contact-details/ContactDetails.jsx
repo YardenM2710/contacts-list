@@ -127,7 +127,7 @@ export function ContactDetails() {
             <Typography width={100} mr={2} color={'grey'} variant="h6" component="h3">
               ADDRESS:
             </Typography>
-            <Typography sx={isMobile ? textEllipsisSX : ''} fontSize={18} variant="h5" component="h2">
+            <Typography sx={isMobile ? textEllipsisSX : {}} fontSize={18} variant="h5" component="h2">
               {getAdressTxt()}
             </Typography>
           </Box>
@@ -136,7 +136,7 @@ export function ContactDetails() {
             <Typography width={100} mr={2} color={'grey'} variant="h6" component="h3">
               EMAIL:
             </Typography>
-            <Typography sx={isMobile ? textEllipsisSX : ''} fontSize={18} variant="h5" component="h2">
+            <Typography sx={isMobile ? textEllipsisSX : {}} fontSize={18} variant="h5" component="h2">
               {contact.email}
             </Typography>
           </Box>

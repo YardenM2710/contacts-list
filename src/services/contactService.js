@@ -20,9 +20,13 @@ export const contactService = {
 async function query(sortBy, filterBy) {
   try {
     const savedContacs = storageService.load(KEY)
+    console.log('sortBy', sortBy);
+    console.log('savedContacs', savedContacs);
+
     const filteredContacts = filterContacts(savedContacs, filterBy)
-    console.log('filteredContacts', filteredContacts);
-    if (filteredContacts) return sortContacts(filteredContacts, sortBy)
+
+    if (filteredContacts?.length) return sortBy ? sortContacts(filteredContacts, sortBy) : filteredContacts
+
     const contacts = []
     for (let i = 0; i < 3; i++) {
       const { data } = await axios.get('https://randomuser.me/api')

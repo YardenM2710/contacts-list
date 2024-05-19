@@ -7,11 +7,13 @@ import { NoResults } from '../../shared-components/NoResults';
 import useIsMobile from '../../custom-hooks/use-is-mobile.hook';
 import { SortCmp } from '../../shared-components/SortCmp';
 import { useSnackbar } from 'notistack';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 export function ContactPage() {
   const [contacts, setContacts] = useState([]);
   const [countries, setCountries] = useState([]);
-  const [sortBy, setSortBy] = useState({ field: 'name', order: 'asc' });
+  const [sortBy, setSortBy] = useState(null);
   const [filterBy, setFilterBy] = useState({ value: '' });
   const isMobile = useIsMobile();
   const { enqueueSnackbar } = useSnackbar();
@@ -26,17 +28,19 @@ export function ContactPage() {
 
   const handleSort = field => {
     // Toggle sorting order if the same field is clicked again
-    const newOrder = sortBy.field === field && sortBy.order === 'asc' ? 'desc' : 'asc';
+  
+    const newOrder = sortBy?.field === field && sortBy?.order === 'asc' ? 'desc' : 'asc';
     setSortBy({ field, order: newOrder });
   };
 
   const saveContacts = contacts => {
-    console.log(contacts);
+    console.log('saveContacts',contacts);
     setContacts(contacts);
     contactService.saveContacts(contacts);
   };
 
   const loadContacts = async () => {
+    console.log(filterBy);
     const contacts = await contactService.query(sortBy, filterBy);
     setContacts(contacts);
   };
@@ -72,7 +76,13 @@ export function ContactPage() {
     <>
       <MainHeader setFilterBy={setFilterBy} addContact={addContact} contactCount={contacts?.length} countriesCount={countries} />
       <SortCmp sortBy={sortBy} handleSort={handleSort} />
-      <ContactsContext.Provider value={{ contacts, isMobile }}>{contacts?.length ? <ContactList deleteContact={deleteContact} saveContacts={saveContacts} /> : <NoResults />}</ContactsContext.Provider>
+      <ContactsContext.Provider value={{ contacts, isMobile }}>
+        {contacts?.length ?
+        <DndProvider backend={HTML5Backend}>
+          <ContactList deleteContact={deleteContact} saveContacts={saveContacts} /> 
+        </DndProvider> 
+        : <NoResults />}
+        </ContactsContext.Provider>
     </>
   );
 }
